@@ -30,6 +30,12 @@ public:
 
     container_type& get() { return m_data; }
 
+    container_type::iterator begin() const { return m_data.begin(); }
+    container_type::iterator end() const { return m_data.end(); }
+    container_type::size_type size() const { return m_data.size(); }
+    bool empty() const { return size() <= 0; }
+    void clear() { m_data.clear(); }
+
     friend this_type&
     operator>> (
             this_type& set_,
