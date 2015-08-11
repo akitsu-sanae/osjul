@@ -30,30 +30,37 @@ public:
 
     container_type& get() { return m_data; }
 
-    friend this_type&
-    operator>> (
-            this_type& set_,
-            typename osjul::identity<std::function<value_type (value_type)>>::type f) {
-        for (auto&& e : set_.m_data)
+    template<typename Func>
+    this_type& each(Func f) {
+        for (auto&& e : m_data)
             e = f(e);
-        return set_;
+        return *this;
     }
 
-    friend this_type&
-    operator|| (
-            this_type& set_,
-            typename osjul::identity<std::function<bool (value_type)>>::type f) {
+    template<typename Func>
+    this_type& filter(Func f) {
         auto it = std::remove_if(
-                set_.m_data.begin(),
-                set_.m_data.end(),
-                std::not1(f));
-        set_.m_data.erase(it,set_.m_data.end());
-        return set_;
+                m_data.begin(), m_data.end(),
+                [&](value_type const& e){ return !f(e); }
+                );
+        m_data.erase(it,m_data.end());
+        return *this;
+    }
+
+    template<typename U>
+    void apply(U& target) {
+        target.clear();
+        std::copy(m_data.begin(), m_data.end(), std::back_inserter(target));
     }
 
 private:
     container_type m_data;
 };
+
+template<typename T>
+inline osjul::set<typename T::value_type> make_set(T const& t) {
+    return osjul::set<typename T::value_type>(t);
+}
 
 }
 
