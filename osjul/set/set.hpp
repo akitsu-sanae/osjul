@@ -30,6 +30,12 @@ public:
 
     container_type& get() { return m_data; }
 
+    container_type::iterator begin() const { return m_data.begin(); }
+    container_type::iterator end() const { return m_data.end(); }
+    container_type::size_type size() const { return m_data.size(); }
+    bool empty() const { return size() <= 0; }
+    void clear() { m_data.clear(); }
+
     template<typename Func>
     this_type& each(Func f) {
         for (auto&& e : m_data)
