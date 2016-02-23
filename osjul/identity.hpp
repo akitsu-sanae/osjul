@@ -1,5 +1,5 @@
-#ifndef OSJUL_IDENTITY_JPP
-#define OSJUL_IDENTITY_JPP
+#ifndef OSJUL_IDENTITY_HPP
+#define OSJUL_IDENTITY_HPP
 
 namespace osjul {
 
