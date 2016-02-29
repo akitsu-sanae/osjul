@@ -11,7 +11,7 @@ struct Linq {
         data(data)
     {}
     template<typename F>
-    Linq& operator| (F const& f) {
+    Linq& operator/ (F const& f) {
         auto it = std::remove_if(std::begin(data), std::end(data), [f](auto&& e){
                 return !f(e);
                 });
@@ -19,10 +19,11 @@ struct Linq {
         return *this;
     }
     template<typename F>
-    Linq& operator> (F const& f) {
+    Linq& operator+ (F const& f) {
         for (auto&& e : data) {
             e = f(e);
         }
+        return *this;
     }
 private:
     T& data;
