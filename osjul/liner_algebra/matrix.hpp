@@ -62,6 +62,15 @@ struct matrix {
         return result;
     }
 
+    bool is_transposed() const {
+        for (int y=0; y<Height; y++) {
+            for (int x=y+1; x<Width; x++) {
+                if (at(x, y) != at(y, x))
+                    return false;
+            }
+        }
+        return true;
+    }
 
     value_type elems[Height][Width];
 };

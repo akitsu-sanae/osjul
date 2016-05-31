@@ -40,5 +40,29 @@ int main() {
         {-3, 4}
     }};
     std::cout << e * f << std::endl;
+    std::cout << std::boolalpha;
+
+    std::cout << osjul::la::matrix<double, 2, 2> {{
+        {1, 4},
+        {5, 6}
+    }}.is_transposed() << std::endl;
+
+    std::cout << osjul::la::matrix<double, 2, 2> {{
+        {3, 1},
+        {1, 3}
+    }}.is_transposed() << std::endl;
+
+    std::cout << osjul::la::matrix<double, 3, 3> {{
+        {1, 3, 4},
+        {5, 3, 1},
+        {5, 1, 3}
+    }}.is_transposed() << std::endl;
+
+    std::cout << osjul::la::matrix<double, 3, 3> {{
+        {1, 3, 4},
+        {3, 5, 9},
+        {4, 9, 0}
+    }}.is_transposed() << std::endl;
+
 }
 
