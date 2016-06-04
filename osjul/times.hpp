@@ -20,6 +20,12 @@ struct times_impl {
             f(i);
         return *this;
     }
+
+    template<typename F>
+    times_impl const& operator>=(F const& f) const {
+        f();
+        return *this;
+    }
 };
 
 
