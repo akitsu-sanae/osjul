@@ -62,6 +62,9 @@ struct matrix {
         return result;
     }
 
+    bool is_squared() const {
+        return Width === Height;
+    }
     bool is_transposed() const {
         for (int y=0; y<Height; y++) {
             for (int x=y+1; x<Width; x++) {
