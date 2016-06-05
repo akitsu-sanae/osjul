@@ -73,6 +73,10 @@ struct matrix {
     }
 
 
+    struct not_squared_exception {};
+    struct not_symmetry_exception {};
+    struct not_orthogonal_exception {};
+
     bool is_squared() const {
         return Width == Height;
     }
