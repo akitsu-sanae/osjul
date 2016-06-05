@@ -77,7 +77,7 @@ struct matrix {
     struct not_symmetry_exception {};
     struct not_orthogonal_exception {};
 
-    bool is_squared() const {
+    static bool is_squared() {
         return Width == Height;
     }
     bool is_symmetry() const {
@@ -90,6 +90,14 @@ struct matrix {
         return true;
     }
 
+    static matrix<value_type, Width, Height> identity() {
+        if (!is_squared())
+            throw not_squared_exception{};
+        matrix<value_type, Width, Height> result;
+        for (int i=0; i<Width; i++)
+            result.at(i, i) = static_cast<value_type>(1.0);
+        return result;
+    }
     value_type elems[Height][Width];
 };
 

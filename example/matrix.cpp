@@ -71,5 +71,7 @@ int main() {
         {10, 11, 12}
     }}.transpose() << std::endl;
 
+    std::cout << osjul::la::matrix<double, 3, 3>::identity() << std::endl;
+
 }
 
