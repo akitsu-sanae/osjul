@@ -62,10 +62,21 @@ struct matrix {
         return result;
     }
 
-    bool is_squared() const {
-        return Width === Height;
+    matrix<value_type, Height, Width> transpose() const {
+        matrix<value_type, Height, Width> result;
+        for (int y=0; y<Height; y++) {
+            for (int x=0; x<Width; x++) {
+                result.at(y, x) = this->at(x, y);
+            }
+        }
+        return result;
     }
-    bool is_transposed() const {
+
+
+    bool is_squared() const {
+        return Width == Height;
+    }
+    bool is_symmetry() const {
         for (int y=0; y<Height; y++) {
             for (int x=y+1; x<Width; x++) {
                 if (at(x, y) != at(y, x))

@@ -45,24 +45,31 @@ int main() {
     std::cout << osjul::la::matrix<double, 2, 2> {{
         {1, 4},
         {5, 6}
-    }}.is_transposed() << std::endl;
+    }}.is_symmetry() << std::endl;
 
     std::cout << osjul::la::matrix<double, 2, 2> {{
         {3, 1},
         {1, 3}
-    }}.is_transposed() << std::endl;
+    }}.is_symmetry() << std::endl;
 
     std::cout << osjul::la::matrix<double, 3, 3> {{
         {1, 3, 4},
         {5, 3, 1},
         {5, 1, 3}
-    }}.is_transposed() << std::endl;
+    }}.is_symmetry() << std::endl;
 
     std::cout << osjul::la::matrix<double, 3, 3> {{
         {1, 3, 4},
         {3, 5, 9},
         {4, 9, 0}
-    }}.is_transposed() << std::endl;
+    }}.is_symmetry() << std::endl;
+
+    std::cout << osjul::la::matrix<double, 3, 4> {{
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9},
+        {10, 11, 12}
+    }}.transpose() << std::endl;
 
 }
 
