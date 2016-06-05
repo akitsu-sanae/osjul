@@ -8,7 +8,9 @@
 #ifndef OSJUL_LINER_ALGEBRA_MATRIX_HPP
 #define OSJUL_LINER_ALGEBRA_MATRIX_HPP
 
+#include <cfloat>
 #include <cstddef>
+#include <cmath>
 #include <array>
 #include <iostream>
 
@@ -89,6 +91,12 @@ struct matrix {
         }
         return true;
     }
+    bool is_orthogonal() const {
+        // A * (A^t) == I
+        auto tmp = (*this) * this->transpose();
+        std::cout << tmp << std::endl;
+        return tmp == matrix<value_type, Width, Height>::identity();
+    }
 
     static matrix<value_type, Width, Height> identity() {
         if (!is_squared())
@@ -100,6 +108,18 @@ struct matrix {
     }
     value_type elems[Height][Width];
 };
+
+template<typename T, std::size_t W, std::size_t H>
+inline static bool operator==(osjul::la::matrix<T, W, H> const& lhs, osjul::la::matrix<T, W, H> const& rhs) {
+    for (int y=0; y<H; y++) {
+        for (int x=0; x<W; x++) {
+            if (std::abs(lhs.at(x, y) - rhs.at(x, y)) > DBL_EPSILON) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
 
 template<typename T, std::size_t W, std::size_t H>
 inline static std::ostream& operator<<(std::ostream& os, matrix<T, W, H> const& m) {

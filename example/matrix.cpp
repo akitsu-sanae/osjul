@@ -73,5 +73,12 @@ int main() {
 
     std::cout << osjul::la::matrix<double, 3, 3>::identity() << std::endl;
 
+    std::cout << osjul::la::matrix<double, 4, 4>{{
+        {1/2.0, 1/2.0, 1/2.0, 1/2.0},
+        {1/2.0, -1/2.0, 1/2.0, -1/2.0},
+        {1/2.0, 1/2.0, -1/2.0, -1/2.0},
+        {1/2.0, -1/2.0, -1/2.0, 1/2.0}
+    }}.is_orthogonal() << std::endl;
+
 }
 
