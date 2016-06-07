@@ -45,24 +45,66 @@ int main() {
     std::cout << osjul::la::matrix<double, 2, 2> {{
         {1, 4},
         {5, 6}
-    }}.is_transposed() << std::endl;
+    }}.is_symmetry() << std::endl;
 
     std::cout << osjul::la::matrix<double, 2, 2> {{
         {3, 1},
         {1, 3}
-    }}.is_transposed() << std::endl;
+    }}.is_symmetry() << std::endl;
 
     std::cout << osjul::la::matrix<double, 3, 3> {{
         {1, 3, 4},
         {5, 3, 1},
         {5, 1, 3}
-    }}.is_transposed() << std::endl;
+    }}.is_symmetry() << std::endl;
 
     std::cout << osjul::la::matrix<double, 3, 3> {{
         {1, 3, 4},
         {3, 5, 9},
         {4, 9, 0}
-    }}.is_transposed() << std::endl;
+    }}.is_symmetry() << std::endl;
+
+    std::cout << osjul::la::matrix<double, 3, 4> {{
+        {1, 2, 3},
+        {4, 5, 6},
+        {7, 8, 9},
+        {10, 11, 12}
+    }}.transpose() << std::endl;
+
+    std::cout << osjul::la::matrix<double, 3, 3>::identity() << std::endl;
+
+    std::cout << osjul::la::matrix<double, 4, 4>{{
+        {1/2.0, 1/2.0, 1/2.0, 1/2.0},
+        {1/2.0, -1/2.0, 1/2.0, -1/2.0},
+        {1/2.0, 1/2.0, -1/2.0, -1/2.0},
+        {1/2.0, -1/2.0, -1/2.0, 1/2.0}
+    }}.is_orthogonal() << std::endl;
+
+    std::cout << osjul::la::matrix<double, 4, 4>{{
+        {1/4.0, 1/4.0, 1/4.0, 1/4.0},
+        {1/4.0, -1/4.0, 1/4.0, -1/4.0},
+        {1/4.0, 1/4.0, -1/4.0, -1/4.0},
+        {1/4.0, -1/4.0, -1/4.0, 1/4.0}
+    }}.is_orthogonal() << std::endl;
+
+    std::cout << osjul::la::matrix<double, 3, 3>{{
+        {0, 1, 2},
+        {3, 4, 5},
+        {6, 7, 8}
+    }}.child(0, 0) << std::endl;
+
+    // 1
+    std::cout << osjul::la::det(osjul::la::matrix<double, 2, 2> {{
+        {1, 0},
+        {0, 1}
+    }}) << std::endl;
+
+
+    // 3
+    std::cout << osjul::la::det(osjul::la::matrix<double, 2, 2> {{
+        {3, 9},
+        {2, 7}
+    }}) << std::endl;
 
 }
 
