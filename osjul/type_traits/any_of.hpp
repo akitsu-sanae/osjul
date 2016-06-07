@@ -13,7 +13,7 @@
 namespace osjul {
 namespace type_traits {
 
-template<template<typename> class Pred, typename Head, typename ... Tail>
+template<template<typename> class Pred, typename Head = void, typename ... Tail>
 struct any_of :
     std::integral_constant<bool,
         Pred<Head>::value ?
