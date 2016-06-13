@@ -163,6 +163,7 @@ inline static std::ostream& operator<<(std::ostream& os, matrix<T, W, H> const& 
         }
         std::cout << std::endl;
     }
+    return os;
 }
 
 
