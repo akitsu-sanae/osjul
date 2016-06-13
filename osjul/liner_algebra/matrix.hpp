@@ -63,6 +63,24 @@ struct matrix {
         }
         return result;
     }
+    matrix<value_type, Width, Height> operator*(value_type const& rhs) const {
+        matrix<value_type, Width, Height> result = *this;
+        for (int y=0; y<Height; y++) {
+            for (int x=0; x<Width; x++) {
+                result.at(x, y) *= rhs;
+            }
+        }
+        return result;
+    }
+    matrix<value_type, Width, Height> operator/(value_type const& rhs) const {
+        matrix<value_type, Width, Height> result = *this;
+        for (int y=0; y<Height; y++) {
+            for (int x=0; x<Width; x++) {
+                result.at(x, y) /= rhs;
+            }
+        }
+        return result;
+    }
 
     matrix<value_type, Height, Width> transpose() const {
         matrix<value_type, Height, Width> result;
