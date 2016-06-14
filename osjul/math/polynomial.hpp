@@ -49,7 +49,30 @@ struct term : public expression {
         right(r)
     {}
     std::string to_string() const override {
-        return "(" + left->to_string() + ")" + op + "(" + right->to_string() + ")";
+        std::string result;
+        if (auto&& t = std::dynamic_pointer_cast<term>(left))
+            result += "(" + left->to_string() + ")";
+        else
+            result += left->to_string();
+        result += op;
+        if (auto&& t = std::dynamic_pointer_cast<term>(right))
+            result += "(" + right->to_string() + ")";
+        else
+            result += right->to_string();
+        return result;
+    }
+    term& subst(std::string const& variable_name, std::shared_ptr<expression> const& expr) {
+        auto subst_ = [&](std::shared_ptr<expression>& body) {
+            if (auto&& t = std::dynamic_pointer_cast<term>(body))
+                t->subst(variable_name, expr);
+            else if (auto&& v = std::dynamic_pointer_cast<variable>(body)) {
+                if (v->name == variable_name)
+                    body = expr;
+            }
+        };
+        subst_(left);
+        subst_(right);
+        return *this;
     }
     std::shared_ptr<expression> left;
     char op;

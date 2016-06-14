@@ -10,7 +10,7 @@
 
 int main() {
     using namespace osjul::math;
-    auto expr1 = std::make_shared<term>(
+    auto term1 = std::make_shared<term>(
             std::make_shared<term>(
                 std::make_shared<number<int>>(12),
                 '*',
@@ -19,6 +19,7 @@ int main() {
             '+',
             std::make_shared<variable>("x")
             );
-    std::cout << expr1->to_string() << std::endl;
+    std::cout << term1->to_string() << std::endl;
+    std::cout << term1->subst("y", std::make_shared<number<int>>(23)).to_string() << std::endl;
 }
 
