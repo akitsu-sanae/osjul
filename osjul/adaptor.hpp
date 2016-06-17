@@ -29,15 +29,43 @@ static detail::each_impl each {};
 static detail::once_impl once {};
 
 template<typename F>
-struct filter_adaptor { F const& f; };
+struct filter_adaptor {
+    template<typename ... Args>
+    decltype(auto) operator()(Args&& ... args) const {
+        return f(args ...);
+    }
+    F const& f;
+};
+
 template<typename F>
-struct map_adaptor { F const& f; };
+struct map_adaptor {
+    template<typename ... Args>
+    decltype(auto) operator()(Args&& ... args) const {
+        return f(args ...);
+    }
+    F const& f;
+};
+
 template<typename F>
-struct each_adaptor { F const& f; };
+struct each_adaptor {
+    template<typename ... Args>
+    decltype(auto) operator()(Args&& ... args) const {
+        return f(args ...);
+    }
+    F const& f;
+};
+
 struct reverse_adaptor {};
 static reverse_adaptor reverse {};
+
 template<typename F>
-struct once_adaptor { F const& f; };
+struct once_adaptor {
+    template<typename ... Args>
+    decltype(auto) operator()(Args&& ... args) const {
+        return f(args ...);
+    }
+    F const& f;
+};
 
 template<typename F>
 inline static auto operator/(detail::filter_impl const&, F const& f) {
@@ -85,20 +113,20 @@ range<T>&& operator>>(range<T>&& r, filter_adaptor<F> const& f) {
     auto it = std::remove_if(
             std::begin(r.data),
             std::end(r.data),
-            [&](auto const& v) { return !f.f(v); });
+            [&](auto const& v) { return !f(v); });
     r.data.erase(it, std::end(r.data));
     return std::move(r);
 }
 template<typename T, typename F>
 range<T>&& operator>>(range<T>&& r, map_adaptor<F> const& f) {
     for (auto&& e : r.data)
-        e = f.f(e);
+        e = f(e);
     return std::move(r);
 }
 template<typename T, typename F>
 range<T>&& operator>>(range<T>&& r, each_adaptor<F> const& f) {
     for (auto&& e : r.data)
-        f.f(e);
+        f(e);
     return std::move(r);
 }
 template<typename T>
@@ -108,7 +136,7 @@ range<T>&& operator>>(range<T>&& r, reverse_adaptor const&) {
 }
 template<typename T, typename F>
 range<T>&& operator>>(range<T>&& r, once_adaptor<F> const& f) {
-    f.f();
+    f();
     return std::move(r);
 }
 
