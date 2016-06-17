@@ -24,6 +24,7 @@ int main() {
         >> filter / bigger_than_30
         >> each / [](int i) { std::cout << i << std::endl; }
         >> reverse
+        >> once / []() { std::cout << "------ reversed ------" << std::endl; }
         >> each / [](int i) { std::cout << i << std::endl; }
         ;
 }
