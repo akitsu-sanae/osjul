@@ -38,6 +38,8 @@ template<typename F>
 struct each_adaptor {
     F const& f;
 };
+struct reverse_adaptor {};
+static reverse_adaptor reverse {};
 
 template<typename F>
 inline static auto operator/(detail::filter_impl const&, F const& f) {
@@ -95,6 +97,11 @@ template<typename T, typename F>
 range<T>&& operator>>(range<T>&& r, each_adaptor<F> const& f) {
     for (auto&& e : r.data)
         f.f(e);
+    return std::move(r);
+}
+template<typename T>
+range<T>&& operator>>(range<T>&& r, reverse_adaptor const&) {
+    std::reverse(std::begin(r.data), std::end(r.data));
     return std::move(r);
 }
 

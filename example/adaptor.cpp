@@ -23,6 +23,8 @@ int main() {
         >> map / [](int i) { return 3*i*i + 4*i + 5; }
         >> filter / bigger_than_30
         >> each / [](int i) { std::cout << i << std::endl; }
+        >> reverse
+        >> each / [](int i) { std::cout << i << std::endl; }
         ;
 }
 
