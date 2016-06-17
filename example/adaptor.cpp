@@ -22,9 +22,7 @@ int main() {
         >> filter / [](int i) { return i%3 != 0; }
         >> map / [](int i) { return 3*i*i + 4*i + 5; }
         >> filter / bigger_than_30
+        >> each / [](int i) { std::cout << i << std::endl; }
         ;
-    for (auto&& e : data) {
-        std::cout << e << std::endl;
-    }
 }
 
