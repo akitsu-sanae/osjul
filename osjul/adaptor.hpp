@@ -20,10 +20,12 @@ namespace detail {
 struct filter_impl {};
 struct map_impl {};
 struct each_impl {};
+struct each_with_index_impl {};
 
 struct adjacent_filter_impl {};
 struct adjacent_map_impl {};
 struct adjacent_each_impl {};
+struct adjacent_each_with_index_impl {};
 
 struct once_impl {};
 };
@@ -31,10 +33,12 @@ struct once_impl {};
 static detail::filter_impl filter {};
 static detail::map_impl map {};
 static detail::each_impl each {};
+static detail::each_with_index_impl each_width_index {};
 
 static detail::adjacent_filter_impl adjacent_filter {};
 static detail::adjacent_map_impl adjacent_map {};
 static detail::adjacent_each_impl adjacent_each {};
+static detail::adjacent_each_with_index_impl adjacent_each_with_index {};
 
 static detail::once_impl once {};
 
@@ -64,7 +68,14 @@ struct each_adaptor {
     }
     F const& f;
 };
-
+template<typename F>
+struct each_width_index_adaptor {
+    template<typename ... Args>
+    decltype(auto) operator()(Args ... args) const {
+        return f(args ...);
+    }
+    F const& f;
+};
 template<typename F>
 struct adjacent_filter_adaptor {
     template<typename ... Args>
@@ -83,6 +94,14 @@ struct adjacent_map_adaptor {
 };
 template<typename F>
 struct adjacent_each_adaptor {
+    template<typename ... Args>
+    decltype(auto) operator()(Args&& ... args) const {
+        return f(args ...);
+    }
+    F const& f;
+};
+template<typename F>
+struct adjacent_each_with_index_adaptor {
     template<typename ... Args>
     decltype(auto) operator()(Args&& ... args) const {
         return f(args ...);
@@ -118,6 +137,10 @@ inline static auto operator/(detail::each_impl const&, F const& f) {
     return each_adaptor<F>{f};
 }
 template<typename F>
+inline static auto operator/(detail::each_with_index_impl const&, F const& f) {
+    return each_width_index_adaptor<F>{f};
+}
+template<typename F>
 inline static auto operator/(detail::once_impl const&, F const& f) {
     return once_adaptor<F>{f};
 }
@@ -132,6 +155,10 @@ inline static auto operator/(detail::adjacent_map_impl const&, F const& f) {
 template<typename F>
 inline static auto operator/(detail::adjacent_each_impl const&, F const& f) {
     return adjacent_each_adaptor<F>{f};
+}
+template<typename F>
+inline static auto operator/(detail::adjacent_each_with_index_impl const&, F const& f) {
+    return adjacent_each_with_index_adaptor<F>{f};
 }
 
 
@@ -181,6 +208,12 @@ range<T>&& operator>>(range<T>&& r, each_adaptor<F> const& f) {
     return std::move(r);
 }
 template<typename T, typename F>
+range<T>&& operator>>(range<T>&& r, each_width_index_adaptor<F> const& f) {
+    for (typename T::size_type i=0; i<r.data.size(); i++)
+        f(r.data[i], i);
+    return std::move(r);
+}
+template<typename T, typename F>
 range<T>&& operator>>(range<T>&& r, adjacent_filter_adaptor<F> const& f) {
     T result;
     std::size_t size = r.data.size();
@@ -206,8 +239,14 @@ range<T>&& operator>>(range<T>&& r, adjacent_map_adaptor<F> const& f) {
 }
 template<typename T, typename F>
 range<T>&& operator>>(range<T>&& r, adjacent_each_adaptor<F> const& f) {
-    for (std::size_t i=0; i<r.data.size(); i++)
+    for (std::size_t i=0; i<r.data.size()-1; i++)
         f(r.data[i], r.data[i+1]);
+    return std::move(r);
+}
+template<typename T, typename F>
+range<T>&& operator>>(range<T>&& r, adjacent_each_with_index_adaptor<F> const& f) {
+    for (std::size_t i=0; i<r.data.size()-1; i++)
+        f(r.data[i], r.data[i+1], i);
     return std::move(r);
 }
 
