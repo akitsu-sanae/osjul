@@ -43,7 +43,10 @@ static detail::adjacent_each_with_index_impl adjacent_each_with_index {};
 static detail::once_impl once {};
 
 template<typename F>
-struct filter_adaptor {
+struct adaptor_base {
+    adaptor_base(F const& f) :
+        f{f}
+    {}
     template<typename ... Args>
     decltype(auto) operator()(Args&& ... args) const {
         return f(args ...);
@@ -51,63 +54,14 @@ struct filter_adaptor {
     F const& f;
 };
 
-template<typename F>
-struct map_adaptor {
-    template<typename ... Args>
-    decltype(auto) operator()(Args&& ... args) const {
-        return f(args ...);
-    }
-    F const& f;
-};
-
-template<typename F>
-struct each_adaptor {
-    template<typename ... Args>
-    decltype(auto) operator()(Args&& ... args) const {
-        return f(args ...);
-    }
-    F const& f;
-};
-template<typename F>
-struct each_width_index_adaptor {
-    template<typename ... Args>
-    decltype(auto) operator()(Args ... args) const {
-        return f(args ...);
-    }
-    F const& f;
-};
-template<typename F>
-struct adjacent_filter_adaptor {
-    template<typename ... Args>
-    decltype(auto) operator()(Args&& ... args) const {
-        return f(args ...);
-    }
-    F const& f;
-};
-template<typename F>
-struct adjacent_map_adaptor {
-    template<typename ... Args>
-    decltype(auto) operator()(Args&& ... args) const {
-        return f(args ...);
-    }
-    F const& f;
-};
-template<typename F>
-struct adjacent_each_adaptor {
-    template<typename ... Args>
-    decltype(auto) operator()(Args&& ... args) const {
-        return f(args ...);
-    }
-    F const& f;
-};
-template<typename F>
-struct adjacent_each_with_index_adaptor {
-    template<typename ... Args>
-    decltype(auto) operator()(Args&& ... args) const {
-        return f(args ...);
-    }
-    F const& f;
-};
+template<typename F> struct filter_adaptor : public adaptor_base<F> { using adaptor_base<F>::adaptor_base; };
+template<typename F> struct map_adaptor : public adaptor_base<F> { using adaptor_base<F>::adaptor_base; };
+template<typename F> struct each_adaptor : public adaptor_base<F> { using adaptor_base<F>::adaptor_base; };
+template<typename F> struct each_width_index_adaptor : public adaptor_base<F> { using adaptor_base<F>::adaptor_base; };
+template<typename F> struct adjacent_filter_adaptor : public adaptor_base<F> { using adaptor_base<F>::adaptor_base; };
+template<typename F> struct adjacent_map_adaptor : public adaptor_base<F> { using adaptor_base<F>::adaptor_base; };
+template<typename F> struct adjacent_each_adaptor : public adaptor_base<F> { using adaptor_base<F>::adaptor_base; };
+template<typename F> struct adjacent_each_with_index_adaptor : public adaptor_base<F> { using adaptor_base<F>::adaptor_base; };
 
 struct reverse_adaptor {};
 static reverse_adaptor reverse {};
@@ -116,13 +70,7 @@ struct sort_adaptor {};
 static sort_adaptor sort {};
 
 template<typename F>
-struct once_adaptor {
-    template<typename ... Args>
-    decltype(auto) operator()(Args&& ... args) const {
-        return f(args ...);
-    }
-    F const& f;
-};
+struct once_adaptor : public adaptor_base<F> { using adaptor_base<F>::adaptor_base ;};
 
 template<typename F>
 inline static auto operator/(detail::filter_impl const&, F const& f) {
