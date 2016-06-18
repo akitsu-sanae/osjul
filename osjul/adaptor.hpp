@@ -93,6 +93,9 @@ struct adjacent_each_adaptor {
 struct reverse_adaptor {};
 static reverse_adaptor reverse {};
 
+struct sort_adaptor {};
+static sort_adaptor sort {};
+
 template<typename F>
 struct once_adaptor {
     template<typename ... Args>
@@ -211,6 +214,11 @@ range<T>&& operator>>(range<T>&& r, adjacent_each_adaptor<F> const& f) {
 template<typename T>
 range<T>&& operator>>(range<T>&& r, reverse_adaptor const&) {
     std::reverse(std::begin(r.data), std::end(r.data));
+    return std::move(r);
+}
+template<typename T>
+range<T>&& operator>>(range<T>&& r, sort_adaptor const&) {
+    std::sort(std::begin(r.data), std::end(r.data));
     return std::move(r);
 }
 template<typename T, typename F>

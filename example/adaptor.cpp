@@ -32,6 +32,9 @@ int main() {
         >> adjacent_map / [](int a, int b) { return a+b; }
         >> once / []() { std::cout << "-- filter: a+b < 500 -" << std::endl; }
         >> each / [](int i) { std::cout << i << std::endl; }
+        >> sort
+        >> once / []() { std::cout << "-------- sort --------" << std::endl; }
+        >> each / [](int i) { std::cout << i << std::endl; }
         ;
 }
 
