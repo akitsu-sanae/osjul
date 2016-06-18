@@ -6,8 +6,8 @@
 ============================================================================*/
 #include <string>
 #include <vector>
-#include <osjul/adaptor.hpp>
 #include <iostream>
+#include <osjul/adaptor.hpp>
 
 bool bigger_than_30(int n) {
     return n > 30;
@@ -25,6 +25,12 @@ int main() {
         >> each / [](int i) { std::cout << i << std::endl; }
         >> reverse
         >> once / []() { std::cout << "------ reversed ------" << std::endl; }
+        >> each / [](int i) { std::cout << i << std::endl; }
+        >> once / []() { std::cout << "------ adjacent ------" << std::endl; }
+        >> adjacent_each / [](int a, int b) { std::cout << "(" << a << ", " << b << ")" << std::endl; }
+        >> adjacent_filter / [](int a, int b) { return a + b < 500; }
+        >> adjacent_map / [](int a, int b) { return a+b; }
+        >> once / []() { std::cout << "-- filter: a+b < 500 -" << std::endl; }
         >> each / [](int i) { std::cout << i << std::endl; }
         ;
 }

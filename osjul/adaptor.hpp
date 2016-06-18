@@ -8,6 +8,7 @@
 #ifndef OSJUL_ADAPTOR_HPP
 #define OSJUL_ADAPTOR_HPP
 
+#include <type_traits>
 #include <vector>
 #include <memory>
 #include <algorithm>
@@ -19,13 +20,22 @@ namespace detail {
 struct filter_impl {};
 struct map_impl {};
 struct each_impl {};
-struct once_impl {};
 
+struct adjacent_filter_impl {};
+struct adjacent_map_impl {};
+struct adjacent_each_impl {};
+
+struct once_impl {};
 };
 
 static detail::filter_impl filter {};
 static detail::map_impl map {};
 static detail::each_impl each {};
+
+static detail::adjacent_filter_impl adjacent_filter {};
+static detail::adjacent_map_impl adjacent_map {};
+static detail::adjacent_each_impl adjacent_each {};
+
 static detail::once_impl once {};
 
 template<typename F>
@@ -48,6 +58,31 @@ struct map_adaptor {
 
 template<typename F>
 struct each_adaptor {
+    template<typename ... Args>
+    decltype(auto) operator()(Args&& ... args) const {
+        return f(args ...);
+    }
+    F const& f;
+};
+
+template<typename F>
+struct adjacent_filter_adaptor {
+    template<typename ... Args>
+    decltype(auto) operator()(Args&& ... args) const {
+        return f(args ...);
+    }
+    F const& f;
+};
+template<typename F>
+struct adjacent_map_adaptor {
+    template<typename ... Args>
+    decltype(auto) operator()(Args&& ... args) const {
+        return f(args ...);
+    }
+    F const& f;
+};
+template<typename F>
+struct adjacent_each_adaptor {
     template<typename ... Args>
     decltype(auto) operator()(Args&& ... args) const {
         return f(args ...);
@@ -83,6 +118,19 @@ template<typename F>
 inline static auto operator/(detail::once_impl const&, F const& f) {
     return once_adaptor<F>{f};
 }
+template<typename F>
+inline static auto operator/(detail::adjacent_filter_impl const&, F const& f) {
+    return adjacent_filter_adaptor<F>{f};
+}
+template<typename F>
+inline static auto operator/(detail::adjacent_map_impl const&, F const& f) {
+    return adjacent_map_adaptor<F>{f};
+}
+template<typename F>
+inline static auto operator/(detail::adjacent_each_impl const&, F const& f) {
+    return adjacent_each_adaptor<F>{f};
+}
+
 
 template<typename T>
 struct range {
@@ -129,6 +177,37 @@ range<T>&& operator>>(range<T>&& r, each_adaptor<F> const& f) {
         f(e);
     return std::move(r);
 }
+template<typename T, typename F>
+range<T>&& operator>>(range<T>&& r, adjacent_filter_adaptor<F> const& f) {
+    T result;
+    std::size_t size = r.data.size();
+    for (std::size_t i=0; i<size -1; i++) {
+        if (f(r.data[i], r.data[i+1]))
+            result.push_back(r.data[i]);
+    }
+    if (f(r.data[size-2], r.data[size-1])) {
+        result.push_back(r.data[size-1]);
+    }
+    r.data.swap(result);
+    return std::move(r);
+}
+template<typename T, typename F>
+range<T>&& operator>>(range<T>&& r, adjacent_map_adaptor<F> const& f) {
+    T result;
+    std::size_t size = r.data.size();
+    result.reserve(size-1);
+    for (std::size_t i=0; i<size-1; i++)
+        result.push_back(f(r.data[i], r.data[i+1]));
+    r.data.swap(result);
+    return std::move(r);
+}
+template<typename T, typename F>
+range<T>&& operator>>(range<T>&& r, adjacent_each_adaptor<F> const& f) {
+    for (std::size_t i=0; i<r.data.size(); i++)
+        f(r.data[i], r.data[i+1]);
+    return std::move(r);
+}
+
 template<typename T>
 range<T>&& operator>>(range<T>&& r, reverse_adaptor const&) {
     std::reverse(std::begin(r.data), std::end(r.data));
