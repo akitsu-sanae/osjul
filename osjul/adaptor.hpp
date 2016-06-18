@@ -70,6 +70,9 @@ struct sort_adaptor {};
 static sort_adaptor sort {};
 
 template<typename F>
+struct sort_with_adaptor : public adaptor_base<F> { using adaptor_base<F>::adaptor_base; };
+
+template<typename F>
 struct once_adaptor : public adaptor_base<F> { using adaptor_base<F>::adaptor_base ;};
 
 template<typename F>
@@ -107,6 +110,10 @@ inline static auto operator/(detail::adjacent_each_impl const&, F const& f) {
 template<typename F>
 inline static auto operator/(detail::adjacent_each_with_index_impl const&, F const& f) {
     return adjacent_each_with_index_adaptor<F>{f};
+}
+template<typename F>
+inline static auto operator/(sort_adaptor const& adaptor, F const& f) {
+    return sort_with_adaptor<F>{f};
 }
 
 
@@ -206,6 +213,11 @@ range<T>&& operator>>(range<T>&& r, reverse_adaptor const&) {
 template<typename T>
 range<T>&& operator>>(range<T>&& r, sort_adaptor const&) {
     std::sort(std::begin(r.data), std::end(r.data));
+    return std::move(r);
+}
+template<typename T, typename F>
+range<T>&& operator>>(range<T>&& r, sort_with_adaptor<F> const& f) {
+    std::sort(std::begin(r.data), std::end(r.data), f);
     return std::move(r);
 }
 template<typename T, typename F>

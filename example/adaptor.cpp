@@ -37,6 +37,9 @@ int main() {
         >> each_width_index / [](int n, int i) { std::cout << i << ":" << n << std::endl; }
         >> once / []() { std::cout << "----------------------" << std::endl; }
         >> adjacent_each_with_index / [](int a, int b, int i) { std::cout << i << ":  (" << a << ", " << b << ")" << std::endl; }
+        >> once / []() { std::cout << "----------------------" << std::endl; }
+        >> sort / [](int a, int b) { return a > b; }
+        >> each / [](int n) { std::cout << n << std::endl; }
         ;
 }
 
