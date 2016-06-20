@@ -76,43 +76,43 @@ template<typename F>
 struct once_adaptor : public adaptor_base<F> { using adaptor_base<F>::adaptor_base ;};
 
 template<typename F>
-inline static auto operator/(detail::filter_impl const&, F const& f) {
+inline static auto operator>>(detail::filter_impl const&, F const& f) {
     return filter_adaptor<F>{f};
 }
 template<typename F>
-inline static auto operator/(detail::map_impl const&, F const& f) {
+inline static auto operator>>(detail::map_impl const&, F const& f) {
     return map_adaptor<F>{f};
 }
 template<typename F>
-inline static auto operator/(detail::each_impl const&, F const& f) {
+inline static auto operator>>(detail::each_impl const&, F const& f) {
     return each_adaptor<F>{f};
 }
 template<typename F>
-inline static auto operator/(detail::each_with_index_impl const&, F const& f) {
+inline static auto operator>>(detail::each_with_index_impl const&, F const& f) {
     return each_width_index_adaptor<F>{f};
 }
 template<typename F>
-inline static auto operator/(detail::once_impl const&, F const& f) {
+inline static auto operator>>(detail::once_impl const&, F const& f) {
     return once_adaptor<F>{f};
 }
 template<typename F>
-inline static auto operator/(detail::adjacent_filter_impl const&, F const& f) {
+inline static auto operator>>(detail::adjacent_filter_impl const&, F const& f) {
     return adjacent_filter_adaptor<F>{f};
 }
 template<typename F>
-inline static auto operator/(detail::adjacent_map_impl const&, F const& f) {
+inline static auto operator>>(detail::adjacent_map_impl const&, F const& f) {
     return adjacent_map_adaptor<F>{f};
 }
 template<typename F>
-inline static auto operator/(detail::adjacent_each_impl const&, F const& f) {
+inline static auto operator>>(detail::adjacent_each_impl const&, F const& f) {
     return adjacent_each_adaptor<F>{f};
 }
 template<typename F>
-inline static auto operator/(detail::adjacent_each_with_index_impl const&, F const& f) {
+inline static auto operator>>(detail::adjacent_each_with_index_impl const&, F const& f) {
     return adjacent_each_with_index_adaptor<F>{f};
 }
 template<typename F>
-inline static auto operator/(sort_adaptor const& adaptor, F const& f) {
+inline static auto operator>>(sort_adaptor const& adaptor, F const& f) {
     return sort_with_adaptor<F>{f};
 }
 
@@ -142,7 +142,7 @@ inline static auto make_range(T& t) {
 }
 
 template<typename T, typename F>
-range<T>&& operator>>(range<T>&& r, filter_adaptor<F> const& f) {
+range<T>&& operator|(range<T>&& r, filter_adaptor<F> const& f) {
     auto it = std::remove_if(
             std::begin(r.data),
             std::end(r.data),
@@ -151,25 +151,25 @@ range<T>&& operator>>(range<T>&& r, filter_adaptor<F> const& f) {
     return std::move(r);
 }
 template<typename T, typename F>
-range<T>&& operator>>(range<T>&& r, map_adaptor<F> const& f) {
+range<T>&& operator|(range<T>&& r, map_adaptor<F> const& f) {
     for (auto&& e : r.data)
         e = f(e);
     return std::move(r);
 }
 template<typename T, typename F>
-range<T>&& operator>>(range<T>&& r, each_adaptor<F> const& f) {
+range<T>&& operator|(range<T>&& r, each_adaptor<F> const& f) {
     for (auto&& e : r.data)
         f(e);
     return std::move(r);
 }
 template<typename T, typename F>
-range<T>&& operator>>(range<T>&& r, each_width_index_adaptor<F> const& f) {
+range<T>&& operator|(range<T>&& r, each_width_index_adaptor<F> const& f) {
     for (typename T::size_type i=0; i<r.data.size(); i++)
         f(r.data[i], i);
     return std::move(r);
 }
 template<typename T, typename F>
-range<T>&& operator>>(range<T>&& r, adjacent_filter_adaptor<F> const& f) {
+range<T>&& operator|(range<T>&& r, adjacent_filter_adaptor<F> const& f) {
     T result;
     std::size_t size = r.data.size();
     for (std::size_t i=0; i<size -1; i++) {
@@ -183,7 +183,7 @@ range<T>&& operator>>(range<T>&& r, adjacent_filter_adaptor<F> const& f) {
     return std::move(r);
 }
 template<typename T, typename F>
-range<T>&& operator>>(range<T>&& r, adjacent_map_adaptor<F> const& f) {
+range<T>&& operator|(range<T>&& r, adjacent_map_adaptor<F> const& f) {
     T result;
     std::size_t size = r.data.size();
     result.reserve(size-1);
@@ -193,35 +193,35 @@ range<T>&& operator>>(range<T>&& r, adjacent_map_adaptor<F> const& f) {
     return std::move(r);
 }
 template<typename T, typename F>
-range<T>&& operator>>(range<T>&& r, adjacent_each_adaptor<F> const& f) {
+range<T>&& operator|(range<T>&& r, adjacent_each_adaptor<F> const& f) {
     for (std::size_t i=0; i<r.data.size()-1; i++)
         f(r.data[i], r.data[i+1]);
     return std::move(r);
 }
 template<typename T, typename F>
-range<T>&& operator>>(range<T>&& r, adjacent_each_with_index_adaptor<F> const& f) {
+range<T>&& operator|(range<T>&& r, adjacent_each_with_index_adaptor<F> const& f) {
     for (std::size_t i=0; i<r.data.size()-1; i++)
         f(r.data[i], r.data[i+1], i);
     return std::move(r);
 }
 
 template<typename T>
-range<T>&& operator>>(range<T>&& r, reverse_adaptor const&) {
+range<T>&& operator|(range<T>&& r, reverse_adaptor const&) {
     std::reverse(std::begin(r.data), std::end(r.data));
     return std::move(r);
 }
 template<typename T>
-range<T>&& operator>>(range<T>&& r, sort_adaptor const&) {
+range<T>&& operator|(range<T>&& r, sort_adaptor const&) {
     std::sort(std::begin(r.data), std::end(r.data));
     return std::move(r);
 }
 template<typename T, typename F>
-range<T>&& operator>>(range<T>&& r, sort_with_adaptor<F> const& f) {
+range<T>&& operator|(range<T>&& r, sort_with_adaptor<F> const& f) {
     std::sort(std::begin(r.data), std::end(r.data), f);
     return std::move(r);
 }
 template<typename T, typename F>
-range<T>&& operator>>(range<T>&& r, once_adaptor<F> const& f) {
+range<T>&& operator|(range<T>&& r, once_adaptor<F> const& f) {
     f();
     return std::move(r);
 }
