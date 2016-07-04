@@ -6,6 +6,9 @@
 namespace osjul {
 namespace utility {
 
+template<typename T>
+using ptr = std::shared_ptr<T>;
+
 template<typename T, typename Deleter, typename ... Args>
 inline static auto
 make_shared(Deleter&& deleter, Args ... args) {
