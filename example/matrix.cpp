@@ -6,7 +6,7 @@
 ============================================================================*/
 
 
-#include <osjul/liner_algebra.hpp>
+#include <osjul/math/matrix.hpp>
 
 
 int main() {
