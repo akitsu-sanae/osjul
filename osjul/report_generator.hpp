@@ -10,6 +10,12 @@
 
 #include <string>
 
+/*============================================================================
+ *
+ * NOTE: I am in the middle of implementing
+ *
+ * ==========================================================================*/
+
 namespace osjul {
 namespace report_generator {
 
